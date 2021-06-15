@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  EnvironmentName: 
+    Description: dev/qa/prod
+    Type: String
+  Keyname:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+
+Resources:
+  Ec2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-0d5eff06f840b45e9
+      KeyName: !Ref Keyname
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+              sudo yum update -y
+              sudo yum install httpd -y
+              sudo systemctl enable httpd
+              sudo systemctl start httpd
+              sudo yum update -y
+              sudo yum install -y ruby wget
+              sudo wget https://aws-codedeploy-eu-west-1.s3.eu-west-1.amazonaws.com/latest/install
+              sudo chmod +x ./install
+              sudo ./install auto
+              sudo systemctl enable codedeploy-agent
+              sudo systemctl start codedeploy-agent
+              sudo chmod 777 /var/www/html -R
+      IamInstanceProfile: !Ref ec2InstanceProfile
+
+
+      SecurityGroups: 
+        - !Ref InstanceSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: !Join [ "-", [ !Ref EnvironmentName, 'ec2-instance' ] ]
+      
+  InstanceSecurityGroup: 
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow http to client host
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0  
+  
+  EC2codedeployRole: 
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "ec2.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/"
+      
+  ec2RolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: "root"
+      PolicyDocument: 
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - s3:GetObject
+          - s3:GetObjectVersion
+          - s3:ListBucket
+          Effect: Allow
+          Resource: "*"
+
+      Roles: 
+        - Ref: "EC2codedeployRole"
+
+  ec2InstanceProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - Ref: "EC2codedeployRole"

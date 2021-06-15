@@ -1,0 +1,7 @@
+#!/bin/bash
+ENVIRONMENT_NAME="$1"
+
+ls
+
+
+aws cloudformation deploy --stack-name ec2instance --template-file 'EC2_instance.yml' --parameter-overrides EnvironmentName=$ENVIRONMENT_NAME Keyname=awskey2 --capabilities CAPABILITY_IAM --region us-east-1
