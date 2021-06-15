@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+    environment {
+        TEST_ENV = 'dev'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'LaunchInstance.sh' $TEST_ENV
+            }
+        }
+    }
+}
