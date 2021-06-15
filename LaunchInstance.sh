@@ -1,5 +1,5 @@
 #!/bin/bash
-ENVIRONMENT_NAME="$1"
+ENVIRONMENT_NAME="dev"
 
 ls
 
