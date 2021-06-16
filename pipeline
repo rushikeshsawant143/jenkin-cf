@@ -6,11 +6,6 @@ pipeline {
                 sh '''
                     echo "This is step script"
                     ls -ltr
-                    ll
-                    sudo chmod +x LaunchInstance.sh
-                    sudo chmod +x EC2_instance.yml
-                    sudo chmod +x pipeline
-                    ll
                 '''
                 sh './LaunchInstance.sh'
             }
