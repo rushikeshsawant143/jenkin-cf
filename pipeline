@@ -12,7 +12,7 @@ pipeline {
                     sudo chmod +x pipeline
                     ll
                 '''
-                sh 'LaunchInstance.sh'
+                sh './LaunchInstance.sh'
             }
         }
     }
