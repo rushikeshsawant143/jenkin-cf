@@ -6,6 +6,7 @@ pipeline {
                 sh '''
                     echo "This is step script"
                     ls -ltr
+                    pwd
                 '''
                 sh './LaunchInstance.sh'
             }
