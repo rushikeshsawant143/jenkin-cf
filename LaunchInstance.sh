@@ -1,5 +1,5 @@
 #!/bin/bash
-ENVIRONMENT_NAME="dev"
+ENVIRONMENT_NAME="$TEST_ENV"
 
 ls
 
