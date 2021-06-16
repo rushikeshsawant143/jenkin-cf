@@ -2,6 +2,7 @@
 ENVIRONMENT_NAME="$TEST_ENV"
 
 ls
+aws configure
 
 
-aws cloudformation deploy --stack-name ec2instance --template-file 'EC2_instance.yml' --parameter-overrides EnvironmentName=$ENVIRONMENT_NAME Keyname=awskey2 --capabilities CAPABILITY_IAM
+aws cloudformation deploy --stack-name ec2instance --template-file 'EC2_instance.yml' --parameter-overrides EnvironmentName=$ENVIRONMENT_NAME Keyname=awskey2 --capabilities CAPABILITY_IAM --region "us-east-1"
