@@ -7,7 +7,7 @@ pipeline {
                     echo "This is step script"
                     ls -ltr
                     pwd
-                    sudo chmod 777 LaunchInstance.sh
+                    chmod 777 LaunchInstance.sh
                 '''
                 sh './LaunchInstance.sh'
             }
