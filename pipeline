@@ -7,7 +7,10 @@ pipeline {
                     echo "This is step script"
                     ls -ltr
                     ll
-                    chmod +x .
+                    chmod +x LaunchInstance.sh
+                    chmod +x EC2_instance.yml
+                    chmod +x pipeline
+                    ll
                 '''
                 sh 'LaunchInstance.sh'
             }
